@@ -1,6 +1,6 @@
 import React from 'react';
-import Home from './src/screens/home';
+import Navigator from './src/services/navigator/Navigator';
 
 export default function App(): React.JSX.Element {
-  return <Home />;
+  return <Navigator />;
 }
