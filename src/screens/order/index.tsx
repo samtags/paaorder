@@ -1,16 +1,14 @@
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {SafeAreaView, Text, View} from 'react-native';
 import {useEffect, useState} from 'react';
-import getCustomers, {Customer} from '../../services/api/getCustomers';
-import {Order as IOrder} from '../../services/api/getOrders';
+import getCustomers, {Customer} from '@/services/api/getCustomers';
+import {Order as IOrder} from '@/services/api/getOrders';
 import moment from 'moment';
 
 export default function Order() {
   const navigation = useNavigation();
   const route = useRoute();
   const order = route.params as IOrder;
-
-  navigation.setOptions({title: `PO-${order.orderId}`});
 
   const [customers, setCustomers] = useState<Customer[]>([]);
 
@@ -27,6 +25,7 @@ export default function Order() {
 
   useEffect(() => {
     handleGetCustomers();
+    navigation.setOptions({title: `PO-${order.orderId}`});
   }, []);
 
   const customer = customers.find(

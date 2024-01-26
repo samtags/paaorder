@@ -1,8 +1,8 @@
 import {useEffect, useState} from 'react';
 import {SafeAreaView, Text, TouchableOpacity, View} from 'react-native';
-import getOrders, {Order} from '../../services/api/getOrders';
+import getOrders, {Order} from '@/services/api/getOrders';
 import {useNavigation} from '@react-navigation/native';
-import getCustomers, {Customer} from '../../services/api/getCustomers';
+import getCustomers, {Customer} from '@/services/api/getCustomers';
 
 export default function Home() {
   const navigation = useNavigation();
