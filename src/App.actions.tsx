@@ -8,6 +8,7 @@ import moment from 'moment';
 export interface Methods {
   handleCompleteOrder: (orderId: number) => unknown;
   handleTakeOrder: (orderId: number) => unknown;
+  handleExpiredOrder: (orderId: number) => unknown;
 }
 
 const AppActions: IActions<Methods> = ({
@@ -90,10 +91,18 @@ const AppActions: IActions<Methods> = ({
     });
   }
 
+  function handleExpiredOrder(orderId: number) {
+    // todo: update booking status to expired
+    // todo: remove to the order table
+    // todo: move to expired table
+    console.log('🚀 ~ handleExpiredOrder ~ orderId:', orderId);
+  }
+
   // public methods
   return useRegisterActions({
     handleCompleteOrder,
     handleTakeOrder,
+    handleExpiredOrder,
   });
 };
 

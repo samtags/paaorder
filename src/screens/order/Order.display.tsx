@@ -9,9 +9,11 @@ import amount from '@/services/utils/formatAmount';
 import Optional from '@/components/optional';
 
 export default function Order() {
+  const actions = useActions<Methods>();
+
   const order = useProps<IOrder | undefined>('order');
   const customer = useProps<Customer | undefined>('customer');
-  const actions = useActions<Methods>();
+  const countdownTimer = useProps<string>('countdownTimer');
 
   return (
     <SafeAreaView style={{height: '100%'}}>
@@ -50,6 +52,17 @@ export default function Order() {
             </VStack>
           </VStack>
         </VStack>
+
+        <Optional condition={countdownTimer !== '00'}>
+          <HStack bgColor="white" p={4} mt={1} justifyContent="space-between">
+            <Span fontSize="md" fontWeight="medium">
+              Läuft ab in
+            </Span>
+            <Span fontWeight="black" color="red.800" fontSize="md">
+              00:{countdownTimer}
+            </Span>
+          </HStack>
+        </Optional>
 
         <Box>
           <VStack bgColor="white" p={4} mt={1}>

@@ -5,6 +5,7 @@ import {useEffect} from 'react';
 import {Customer} from '@/services/api/getCustomers';
 import {Methods as AppMethods} from '@/App.actions';
 import Toast from 'react-native-toast-message';
+import moment from 'moment';
 
 export interface Methods {
   handlePressComplete: (orderId: number) => unknown;
@@ -27,6 +28,45 @@ const AppActions: IActions<Methods> = ({useRegisterActions, setState}) => {
     navigation.setOptions({title: `PO-${order.orderId}`});
   }, []);
 
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+
+    const now = moment();
+    const expirationDate = moment(order.expirationDate);
+
+    if (now.isAfter(expirationDate)) {
+      handleExpiredOrder(order.orderId);
+
+      return () => {};
+    }
+
+    if (order.status === 'taken') {
+      if (order.expirationDate) {
+        // todo: change to native module
+        timer = setInterval(() => {
+          const remainingSeconds = moment().diff(order.expirationDate, 'seconds'); // prettier-ignore
+
+          if (remainingSeconds <= 0) {
+            setState(
+              'countdownTimer',
+              `${Math.abs(remainingSeconds)}`.padStart(2, '0'),
+            );
+          }
+
+          if (remainingSeconds === 0) {
+            clearInterval(timer);
+            handleExpiredOrder(order.orderId);
+            return;
+          }
+        }, 1000);
+      }
+    }
+
+    return () => {
+      clearInterval(timer);
+    };
+  }, [order.status]);
+
   function handlePressComplete(id: number) {
     appActions.handleCompleteOrder(id);
 
@@ -42,6 +82,16 @@ const AppActions: IActions<Methods> = ({useRegisterActions, setState}) => {
 
   function handleTakeOrder(orderId: number) {
     appActions.handleTakeOrder(orderId);
+  }
+
+  function handleExpiredOrder(orderId: number) {
+    appActions.handleExpiredOrder(orderId);
+    Toast.show({
+      type: 'error',
+      text1: `Expired PO-${orderId}`,
+      text2: 'Order has been expired',
+      position: 'bottom',
+    });
   }
 
   // public methods
