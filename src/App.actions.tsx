@@ -4,8 +4,8 @@ import getOrders, {Order} from '@/services/api/getOrders';
 import getCustomers, {Customer} from '@/services/api/getCustomers';
 import {Orders, Customers} from '@/index';
 
-interface Methods {
-  //
+export interface Methods {
+  handleCompleteOrder: (orderId: number) => unknown;
 }
 
 const AppActions: IActions<Methods> = ({
@@ -46,8 +46,29 @@ const AppActions: IActions<Methods> = ({
     }
   }, []);
 
+  function handleCompleteOrder(orderId: number) {
+    const order = getState<Order>(`orders.${orderId}`);
+    const completedOrder = {...order};
+    completedOrder.status = 'served';
+
+    // remove order from the table
+    const orders = getState<Orders>('orders');
+    const mutableOrders = {...orders};
+    delete mutableOrders[orderId];
+    setState('orders', mutableOrders);
+
+    // append to the completed order table
+    const completedOrders = getState<Orders>('completedOrders');
+    setState('completedOrders', {
+      ...completedOrders,
+      [orderId]: completedOrder,
+    });
+  }
+
   // public methods
-  return useRegisterActions({});
+  return useRegisterActions({
+    handleCompleteOrder,
+  });
 };
 
 export default AppActions;

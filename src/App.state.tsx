@@ -4,6 +4,7 @@ import {Order} from '@/services/api/getOrders';
 export default {
   customers: {} as Customers,
   orders: {} as Orders,
+  completedOrders: {} as Orders,
 };
 
 export interface Customers {
