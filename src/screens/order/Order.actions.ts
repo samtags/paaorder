@@ -4,6 +4,7 @@ import {Order} from '@/services/api/getOrders';
 import {useEffect} from 'react';
 import {Customer} from '@/services/api/getCustomers';
 import {Methods as AppMethods} from '@/App.actions';
+import Toast from 'react-native-toast-message';
 
 export interface Methods {
   handlePressComplete: (orderId: number) => unknown;
@@ -27,9 +28,14 @@ const AppActions: IActions<Methods> = ({useRegisterActions, setState}) => {
   function handlePressComplete(id: number) {
     appActions.handleCompleteOrder(id);
 
-    navigation.goBack();
+    Toast.show({
+      type: 'success',
+      text1: `Served PO-${id}`,
+      text2: `Order has been served! Earned ${order.totalPrice} 🎉`,
+      position: 'bottom',
+    });
 
-    // todo: show snackbar
+    navigation.goBack();
   }
 
   // public methods

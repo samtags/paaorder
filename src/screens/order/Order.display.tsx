@@ -11,8 +11,6 @@ export default function Order() {
   const customer = useProps<Customer | undefined>('customer');
   const actions = useActions<Methods>();
 
-  console.log('🚀 ~ Order ~ order:', order?.status);
-
   return (
     <SafeAreaView>
       <VStack p={4}>
