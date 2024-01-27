@@ -35,7 +35,7 @@ export type WorkerProps<P> = {
 type IFunc = (state: Obj) => void;
 export type Listeners = Map<unknown, IFunc>;
 
-export type IWorker<I = unknown> = FC<WorkerProps<I>>;
+export type IActions<I = unknown> = FC<WorkerProps<I>>;
 
 export type IUseProp = <I = unknown>(
   key: string,
@@ -43,8 +43,8 @@ export type IUseProp = <I = unknown>(
 ) => I;
 
 export type Params = {
-  View?: FC<any>;
-  Worker?: IWorker<any>;
+  Display?: FC<any>;
+  Actions?: IActions<any>;
   State?: Obj;
   children?: ReactNode;
   ReactContext?: Context<unknown>;

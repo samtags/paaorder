@@ -9,7 +9,7 @@ import {ReactNode, useEffect, useState} from 'react';
 import createComponent, {
   useActions as useActionsHook,
   useProps,
-  IWorker,
+  IActions,
 } from '@/services/bit';
 import type {Obj} from '@/index';
 
@@ -25,7 +25,7 @@ function HighOrderComponent({children}: {children: ReactNode}) {
   return children;
 }
 
-const Worker: IWorker = ({useRegisterActions, getState, setState}) =>
+const Worker: IActions = ({useRegisterActions, getState, setState}) =>
   useRegisterActions({
     increment: () => {
       const count = getState<number>('count');
@@ -55,7 +55,7 @@ function Component() {
 describe('createComponent method', () => {
   test("Should still work if 'View' is empty", () => {
     const CreatedComponent = createComponent({
-      Worker,
+      Actions: Worker,
       State,
       name: 'EmptyDisplay',
     });
@@ -67,7 +67,7 @@ describe('createComponent method', () => {
 
   test("Should still work if 'Worker' is empty", () => {
     const CreatedComponent = createComponent({
-      View: Component,
+      Display: Component,
       State,
       name: 'EmptyActions',
     });
@@ -78,8 +78,8 @@ describe('createComponent method', () => {
 
   test("Should still work if 'State' is empty", () => {
     const CreatedComponent = createComponent({
-      View: Component,
-      Worker,
+      Display: Component,
+      Actions: Worker,
       name: 'EmptyState',
     });
 
@@ -91,8 +91,8 @@ describe('createComponent method', () => {
     const Component1 = ({children}: {children: ReactNode}) => children;
 
     const CreatedComponent = createComponent({
-      View: Component1,
-      Worker,
+      Display: Component1,
+      Actions: Worker,
       State,
       name: 'HighOrderUseCase',
     });
@@ -109,7 +109,7 @@ describe('createComponent method', () => {
 
   test('High order component use case with no Component', () => {
     const CreatedComponent = createComponent({
-      Worker,
+      Actions: Worker,
       State,
       name: 'HOC',
     });
@@ -132,7 +132,7 @@ describe('createComponent method', () => {
 
   test('the "Component" that passed to createComponent should be displayed', () => {
     const CreatedComponent = createComponent({
-      View: Component,
+      Display: Component,
       State,
       name: 'Display',
     });
@@ -148,7 +148,7 @@ describe('createComponent method', () => {
       return null;
     }
     const CreatedComponent = createComponent({
-      Worker: WorkerParam,
+      Actions: WorkerParam,
       name: 'NoDisplay',
     });
     render(<CreatedComponent />);
@@ -157,7 +157,7 @@ describe('createComponent method', () => {
 
   test("the state that passed to createComponent should be accessible from the 'Component'", () => {
     const CreatedComponent = createComponent({
-      View: Component,
+      Display: Component,
       State,
       name: 'StateToDisplay',
     });
@@ -177,8 +177,8 @@ describe('createComponent method', () => {
     }
 
     const CreatedComponent = createComponent({
-      View: ViewParam,
-      Worker,
+      Display: ViewParam,
+      Actions: Worker,
       name: 'ActionsToDisplay',
     });
 
@@ -202,7 +202,7 @@ describe('createComponent method', () => {
     }
 
     const CreatedComponent = createComponent({
-      View: ComponentWithStateAccess,
+      Display: ComponentWithStateAccess,
       State,
       name: 'StateToDisplay',
     });
@@ -214,7 +214,7 @@ describe('createComponent method', () => {
   test('state must be accessible from the "Worker"', () => {
     let testCount = 0;
 
-    const WorkerAccessingState: IWorker = ({getState}) => {
+    const WorkerAccessingState: IActions = ({getState}) => {
       const count = getState<number>('count');
 
       useEffect(() => {
@@ -226,7 +226,7 @@ describe('createComponent method', () => {
     };
 
     const CreatedComponent = createComponent({
-      Worker: WorkerAccessingState,
+      Actions: WorkerAccessingState,
       State,
       name: 'StateToActions',
     });
@@ -237,8 +237,8 @@ describe('createComponent method', () => {
 
   test("Should be able to update state from the 'Worker' and receive update in Component", () => {
     const CreatedComponent = createComponent({
-      View: Component,
-      Worker,
+      Display: Component,
+      Actions: Worker,
       State,
       name: 'StateMutation',
     });
@@ -260,7 +260,7 @@ describe('createComponent method', () => {
 it('should able to access props from worker', async () => {
   let retrievedProps: string | undefined;
 
-  const Actions: IWorker = ({foo}) => {
+  const Actions: IActions = ({foo}) => {
     retrievedProps = foo as string;
 
     return null;
@@ -268,7 +268,7 @@ it('should able to access props from worker', async () => {
 
   const CreatedComponent = createComponent({
     name: 'PropsToWorker',
-    Worker: Actions,
+    Actions: Actions,
   });
 
   render(<CreatedComponent foo="bar" />);
@@ -284,7 +284,7 @@ it('should able to receive update if the prop changes', () => {
 
   const CreatedComponent = createComponent({
     name: 'PropsToDisplay',
-    View,
+    Display: View,
   });
 
   function Wrapper() {

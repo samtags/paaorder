@@ -27,8 +27,8 @@ export const useBitContext = (context?: IReactContext) =>
   useContext(context || Context) as IContext;
 
 const createComponent = ({
-  View,
-  Worker,
+  Display: View,
+  Actions: Worker,
   State = {},
   ReactContext,
   name,
