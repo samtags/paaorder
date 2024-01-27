@@ -4,6 +4,8 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
-    }
-  }
+    },
+    "types": ["node"]
+  },
+  "include": ["./src/index.d.ts", "src"]
 }
