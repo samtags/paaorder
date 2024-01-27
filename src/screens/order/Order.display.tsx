@@ -6,6 +6,7 @@ import moment from 'moment';
 import {useActions, useProps} from '@/services/bit';
 import {Methods} from './Order.actions';
 import amount from '@/services/utils/formatAmount';
+import Optional from '@/components/optional';
 
 export default function Order() {
   const order = useProps<IOrder | undefined>('order');
@@ -32,8 +33,8 @@ export default function Order() {
             </Span>
             <VStack py={4}>
               {order?.items.map(item => (
-                <Box py={3}>
-                  <HStack key={item.itemId} justifyContent="space-between">
+                <Box py={3} key={item.itemId}>
+                  <HStack justifyContent="space-between">
                     <VStack>
                       <Span fontSize="md" fontWeight="medium">
                         {item.quantity}x {item.itemName}
@@ -77,16 +78,31 @@ export default function Order() {
           </VStack>
 
           <Box bgColor="white" p={4}>
-            <TouchableOpacity
-              onPress={() =>
-                actions?.handlePressComplete(Number(order?.orderId))
-              }>
-              <Center p={4} bgColor="#00a4e0" rounded="lg">
-                <Span fontWeight="bold" color="white" fontSize="md">
-                  Vollständig
-                </Span>
-              </Center>
-            </TouchableOpacity>
+            <Optional condition={order?.status === 'taken'}>
+              <TouchableOpacity
+                onPress={() =>
+                  actions?.handlePressComplete(Number(order?.orderId))
+                }>
+                <Center p={4} bgColor="#00a4e0" rounded="lg">
+                  <Span fontWeight="bold" color="white" fontSize="md">
+                    Vollständig
+                  </Span>
+                </Center>
+              </TouchableOpacity>
+            </Optional>
+
+            <Optional condition={order?.status === 'open'}>
+              <TouchableOpacity
+                onPress={() =>
+                  actions?.handleTakeOrder(Number(order?.orderId))
+                }>
+                <Center p={4} bgColor="#00263e" rounded="lg">
+                  <Span fontWeight="bold" color="white" fontSize="md">
+                    Vorbereiten
+                  </Span>
+                </Center>
+              </TouchableOpacity>
+            </Optional>
           </Box>
         </Box>
       </VStack>

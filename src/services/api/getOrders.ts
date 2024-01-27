@@ -13,6 +13,7 @@ export interface Order {
   totalPrice: number;
   taxFree: boolean;
   timestamp: string;
+  expirationDate?: Date;
 }
 
 export default async function getOrders() {

@@ -8,6 +8,7 @@ import Toast from 'react-native-toast-message';
 
 export interface Methods {
   handlePressComplete: (orderId: number) => unknown;
+  handleTakeOrder: (orderId: number) => unknown;
 }
 
 const AppActions: IActions<Methods> = ({useRegisterActions, setState}) => {
@@ -15,7 +16,8 @@ const AppActions: IActions<Methods> = ({useRegisterActions, setState}) => {
   const navigation = useNavigation();
   const route = useRoute();
 
-  const order = route.params as Order;
+  const routeParams = route.params as Order;
+  const order = useProps<Order>(`orders.${routeParams.orderId}`, {context: 'App'}); //prettier-ignore
   setState<Order>('order', order);
 
   const customer = useProps<Customer>(`customers.${order.customerId}`, {context: 'App'}); // prettier-ignore
@@ -38,9 +40,14 @@ const AppActions: IActions<Methods> = ({useRegisterActions, setState}) => {
     navigation.goBack();
   }
 
+  function handleTakeOrder(orderId: number) {
+    appActions.handleTakeOrder(orderId);
+  }
+
   // public methods
   return useRegisterActions({
     handlePressComplete,
+    handleTakeOrder,
   });
 };
 

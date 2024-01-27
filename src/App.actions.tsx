@@ -3,9 +3,11 @@ import {IActions} from '@/services/bit';
 import getOrders, {Order} from '@/services/api/getOrders';
 import getCustomers, {Customer} from '@/services/api/getCustomers';
 import {Orders, Customers} from '@/index';
+import moment from 'moment';
 
 export interface Methods {
   handleCompleteOrder: (orderId: number) => unknown;
+  handleTakeOrder: (orderId: number) => unknown;
 }
 
 const AppActions: IActions<Methods> = ({
@@ -68,9 +70,30 @@ const AppActions: IActions<Methods> = ({
     });
   }
 
+  function handleTakeOrder(orderId: number) {
+    const order = getState<Order>(`orders.${orderId}`);
+    const mutableOrder = {...order};
+    mutableOrder.status = 'taken';
+
+    const now = moment();
+
+    // expiration 30 sec
+    now.add('seconds', 30);
+
+    mutableOrder.expirationDate = now.toDate();
+
+    const orders = getState<Orders>('orders');
+
+    setState('orders', {
+      ...orders,
+      [orderId]: mutableOrder,
+    });
+  }
+
   // public methods
   return useRegisterActions({
     handleCompleteOrder,
+    handleTakeOrder,
   });
 };
 
