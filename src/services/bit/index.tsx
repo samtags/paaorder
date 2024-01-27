@@ -76,7 +76,6 @@ const createComponent = ({
       return () => {
         store.unsubscribe(handler);
       };
-      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return hookState;
@@ -183,7 +182,6 @@ const createComponent = ({
 
     useEffect(() => {
       componentWillMount();
-      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     if (!isReady) {

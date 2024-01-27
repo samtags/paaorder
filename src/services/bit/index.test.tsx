@@ -195,7 +195,6 @@ describe('createComponent method', () => {
 
       useEffect(() => {
         testCount = count;
-        // eslint-disable-next-line react-hooks/exhaustive-deps
       }, []);
 
       return null;
@@ -219,7 +218,6 @@ describe('createComponent method', () => {
 
       useEffect(() => {
         testCount = count;
-        // eslint-disable-next-line react-hooks/exhaustive-deps
       }, []);
 
       return null;
