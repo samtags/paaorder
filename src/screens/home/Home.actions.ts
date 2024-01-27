@@ -2,7 +2,6 @@ import {useNavigation} from '@react-navigation/native';
 import {IActions, useProps} from '@/services/bit';
 import {Order} from '@/services/api/getOrders';
 import {Orders} from '@/App.state';
-import {useEffect} from 'react';
 
 export interface Methods {
   handlePressOrder: (o: Order) => unknown;
@@ -11,10 +10,6 @@ export interface Methods {
 const AppActions: IActions<Methods> = ({useRegisterActions, setState}) => {
   const navigation = useNavigation();
   const completedOrders = useProps<Orders>('completedOrders', {context: 'App'});
-
-  useEffect(() => {
-    navigation.setOptions({title: 'Heim'});
-  }, []);
 
   function handlePressOrder(order: Order) {
     type Navigate = (screen: string, payload: Order) => unknown;
