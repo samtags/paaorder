@@ -1,30 +1,14 @@
 import {View as RNView} from 'react-native';
-import {
-  ReactNode,
-  FC,
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
+import {ReactNode, FC, createContext, useEffect, useState} from 'react';
 import get from 'lodash.get';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Store, {cachePrefix} from '@/services/bit/store';
 import type {Obj} from '@/index';
-import type {
-  Params,
-  Actions,
-  IContext,
-  IReactContext,
-  BitBundlerComponentProps,
-} from '@/services/bit';
+import type {Params, Actions, BitBundlerComponentProps} from '@/services/bit';
 
 export const Context = createContext<unknown>({});
 
 export const REGISTRY = '__BIT_REGISTRY__';
-
-export const useBitContext = (context?: IReactContext) =>
-  useContext(context || Context) as IContext;
 
 const createComponent = ({
   Display: View,
