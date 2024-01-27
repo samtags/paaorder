@@ -2,7 +2,7 @@ import {createContext} from 'react';
 import createComponent from '@/services/bit';
 import Display from './App.display';
 import Actions from './App.actions';
-import State from './App.state';
+import State, {whitelistedStateKeys} from './App.state';
 
 export const ReactContext = createContext({} as unknown);
 
@@ -12,6 +12,7 @@ export default createComponent({
   Actions,
   State,
   ReactContext, // required if want to access props outside its bit context.
+  whitelistedStateKeys,
 });
 
 export * from './App.state';

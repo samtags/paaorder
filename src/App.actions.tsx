@@ -35,10 +35,13 @@ const AppActions: IActions<Methods> = ({
 
   useEffect(() => {
     const orders = getState<Orders>('orders');
+    const completedOrders = getState<Orders>('completedOrders');
     const customers = getState<Customers>('customers');
 
-    if (Object.keys(orders).length === 0) {
-      getOrders().then(handleOrders);
+    if (Object.keys(completedOrders).length === 0) {
+      if (Object.keys(orders).length === 0) {
+        getOrders().then(handleOrders);
+      }
     }
 
     if (Object.keys(customers).length === 0) {

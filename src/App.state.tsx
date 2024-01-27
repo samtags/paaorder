@@ -7,6 +7,13 @@ export default {
   completedOrders: {} as Orders,
 };
 
+// append below the keys in the state that want to be persisted
+export const whitelistedStateKeys = [
+  'customers',
+  'orders', //
+  'completedOrders',
+];
+
 export interface Customers {
   [key: number]: Customer;
 }
