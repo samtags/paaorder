@@ -1,13 +1,13 @@
-import {Center, Text as Span, HStack, Box, VStack, Image} from 'native-base';
-import {SafeAreaView, TouchableOpacity} from 'react-native';
+import {HStack, Box, VStack} from 'native-base';
+import {SafeAreaView} from 'react-native';
 import {useActions, useProps} from '@/services/bit';
 import {Customers, Orders} from '@/App.state';
 import {Methods} from '@/screens/home/Home.actions';
-import Optional from '@/components/optional';
-import amount from '@/services/utils/formatAmount';
 import {Order} from '@/services/api/getOrders';
-
-const Arrow = require('@/assets/png/arrow-right.png');
+import Earnings from '@/components/earnings';
+import Banner from '@/components/banner';
+import Heading from '@/components/heading';
+import Card from '@/components/card';
 
 export default function Home() {
   const actions = useActions<Methods>();
@@ -25,56 +25,24 @@ export default function Home() {
 
   return (
     <SafeAreaView>
-      <VStack>
-        <Center mt={8}>
-          <Span fontSize="4xl" fontWeight="medium" color="#00263e">
-            {amount.format(totalEarnings)}
-          </Span>
-          <Span color="gray.400" textAlign="center" maxW={280}>
-            Dies ist Ihr Umsatz vor Anpassungen und Abzügen
-          </Span>
-        </Center>
+      <VStack pt={8}>
+        <Earnings total={totalEarnings} />
 
         <HStack space={2} mt={8} px={4}>
-          <Box flex={1} flexShrink={0}>
-            <TouchableOpacity>
-              {/* prettier-ignore */}
-              <HStack alignItems="center" justifyContent="center" bgColor="#00a4e0" rounded="xl" space={2} p={5}>
-                <Span fontSize="2xl" fontWeight="bold" color="white">
-                  {completedOrdersCount}
-                </Span>
-                <Span color="white">Abgeschlossene</Span>
-              </HStack>
-            </TouchableOpacity>
-          </Box>
-          <Box flex={1} flexShrink={0}>
-            <TouchableOpacity>
-              {/* prettier-ignore */}
-              <HStack alignItems="center" justifyContent="center" bgColor="#00263e" rounded="xl" space={4} p={5}>
-                <Span fontSize="2xl" color="white" fontWeight="bold">
-                  {expiredOrdersCount}
-                </Span>
-                <Span color="white">Abgelaufene</Span>
-              </HStack>
-            </TouchableOpacity>
-          </Box>
+          <Banner
+            value={completedOrdersCount}
+            label="Abgeschlossene"
+            color="#00a4e0"
+          />
+          <Banner
+            value={expiredOrdersCount}
+            label="Abgelaufene"
+            color="#00263e"
+          />
         </HStack>
 
         <Box my={8} px={4}>
-          <Span fontSize="xl" fontWeight="medium" color="#00263e">
-            Aufträge
-          </Span>
-          <Optional condition={Boolean(openOrdersCount)}>
-            <Span color="gray.400">
-              Sie haben ({openOrdersCount}) offene Bestellungen
-            </Span>
-          </Optional>
-
-          <Optional condition={openOrdersCount === 0}>
-            <Span color="gray.400">
-              Alles aufgeholt! Warten auf neue Bestellungen.
-            </Span>
-          </Optional>
+          <Heading title="Aufträge" count={openOrdersCount} />
         </Box>
 
         <VStack space={2}>
@@ -84,24 +52,13 @@ export default function Home() {
             const customer = customers[order?.customerId];
 
             return (
-              <TouchableOpacity
+              <Card
+                key={order.orderId}
+                title={`PO-${order?.orderId}`}
                 onPress={() => actions.handlePressOrder(order)}
-                key={order?.orderId}>
-                <Box bgColor="white" px={4} py={2}>
-                  <HStack alignItems="center" justifyContent="space-between">
-                    <VStack py={2}>
-                      <Span fontWeight="medium" fontSize="lg">
-                        PO-{order?.orderId}
-                      </Span>
-                      <Span color="gray.400">
-                        {order?.items.length} items for {customer?.customerName}
-                      </Span>
-                    </VStack>
-                    {/* prettier-ignore */}
-                    <Image h={3.5} w={3.5} resizeMode="contain" source={Arrow} alt="Arrow"/>
-                  </HStack>
-                </Box>
-              </TouchableOpacity>
+                customerName={customer?.customerName ?? ''}
+                itemCount={order?.items.length ?? 0}
+              />
             );
           })}
         </VStack>
