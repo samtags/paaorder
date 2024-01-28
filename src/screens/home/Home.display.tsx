@@ -33,11 +33,13 @@ export default function Home() {
             value={completedOrdersCount}
             label="Abgeschlossene"
             color="#00a4e0"
+            onPress={() => actions.handleRedirectToCompleted()}
           />
           <Banner
             value={expiredOrdersCount}
             label="Abgelaufene"
             color="#00263e"
+            onPress={() => actions.handleRedirectToExpired()}
           />
         </HStack>
 

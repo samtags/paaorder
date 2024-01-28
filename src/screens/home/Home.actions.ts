@@ -2,9 +2,12 @@ import {useNavigation} from '@react-navigation/native';
 import {IActions, useProps} from '@/services/bit';
 import {Order} from '@/services/api/getOrders';
 import {Orders} from '@/App.state';
+import {navigate} from '@/services/navigator';
 
 export interface Methods {
   handlePressOrder: (o: Order) => unknown;
+  handleRedirectToCompleted: () => unknown;
+  handleRedirectToExpired: () => unknown;
 }
 
 const AppActions: IActions<Methods> = ({useRegisterActions, setState}) => {
@@ -16,6 +19,14 @@ const AppActions: IActions<Methods> = ({useRegisterActions, setState}) => {
     const navigate = navigation.navigate as Navigate;
 
     navigate('Order', order);
+  }
+
+  function handleRedirectToCompleted() {
+    navigate('Completed');
+  }
+
+  function handleRedirectToExpired() {
+    navigate('Expired');
   }
 
   let totalEarnings = 0;
@@ -38,6 +49,8 @@ const AppActions: IActions<Methods> = ({useRegisterActions, setState}) => {
   // public methods
   return useRegisterActions({
     handlePressOrder,
+    handleRedirectToCompleted,
+    handleRedirectToExpired,
   });
 };
 
