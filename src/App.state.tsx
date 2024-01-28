@@ -6,7 +6,7 @@ export default {
   orders: {} as Orders,
   completedOrders: {} as Orders,
   expiredOrders: {} as Orders,
-  expireDurationInSec: 5,
+  expireDurationInSec: 60,
 };
 
 // append below the keys in the state that want to be persisted
