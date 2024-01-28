@@ -5,18 +5,23 @@ import {Customers, Orders} from '@/App.state';
 import {Methods} from '@/screens/home/Home.actions';
 import Optional from '@/components/optional';
 import amount from '@/services/utils/formatAmount';
+import {Order} from '@/services/api/getOrders';
 
 const Arrow = require('@/assets/png/arrow-right.png');
 
 export default function Home() {
-  const totalEarnings = useProps<number>('totalEarnings');
+  const actions = useActions<Methods>();
+
   const orders = useProps<Orders>('orders', {context: 'App'});
   const completedOrders = useProps<Orders>('completedOrders', {context: 'App'});
+  const expiredOrders = useProps<Orders>('expiredOrders', {context: 'App'});
   const customers = useProps<Customers>('customers', {context: 'App'});
-  const actions = useActions<Methods>();
+
+  const totalEarnings = useProps<number>('totalEarnings');
 
   const openOrdersCount = Object.keys(orders).length;
   const completedOrdersCount = Object.keys(completedOrders).length;
+  const expiredOrdersCount = Object.keys(expiredOrders).length;
 
   return (
     <SafeAreaView>
@@ -47,7 +52,7 @@ export default function Home() {
               {/* prettier-ignore */}
               <HStack alignItems="center" justifyContent="center" bgColor="#00263e" rounded="xl" space={4} p={5}>
                 <Span fontSize="2xl" color="white" fontWeight="bold">
-                  0
+                  {expiredOrdersCount}
                 </Span>
                 <Span color="white">Abgelaufene</Span>
               </HStack>
@@ -73,22 +78,23 @@ export default function Home() {
         </Box>
 
         <VStack space={2}>
+          {/* todo: implement in flat list */}
           {Object.keys(orders).map(orderId => {
-            const order = orders[Number(orderId)];
-            const customer = customers[order.customerId];
+            const order: Order | undefined = orders[Number(orderId)];
+            const customer = customers[order?.customerId];
 
             return (
               <TouchableOpacity
                 onPress={() => actions.handlePressOrder(order)}
-                key={order.orderId}>
+                key={order?.orderId}>
                 <Box bgColor="white" px={4} py={2}>
                   <HStack alignItems="center" justifyContent="space-between">
                     <VStack py={2}>
                       <Span fontWeight="medium" fontSize="lg">
-                        PO-{order.orderId}
+                        PO-{order?.orderId}
                       </Span>
                       <Span color="gray.400">
-                        {order.items.length} items for {customer?.customerName}
+                        {order?.items.length} items for {customer?.customerName}
                       </Span>
                     </VStack>
                     {/* prettier-ignore */}

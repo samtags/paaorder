@@ -78,8 +78,8 @@ const AppActions: IActions<Methods> = ({
 
     const now = moment();
 
-    // expiration 30 sec
-    now.add('seconds', 30);
+    const expireDurationInSec = getState<number>('expireDurationInSec');
+    now.add('seconds', expireDurationInSec);
 
     mutableOrder.expirationDate = now.toDate();
 
@@ -92,10 +92,23 @@ const AppActions: IActions<Methods> = ({
   }
 
   function handleExpiredOrder(orderId: number) {
-    // todo: update booking status to expired
-    // todo: remove to the order table
-    // todo: move to expired table
-    console.log('🚀 ~ handleExpiredOrder ~ orderId:', orderId);
+    //  update booking status to expired
+    const order = getState<Order>(`orders.${orderId}`);
+    const mutableOrder = {...order};
+    mutableOrder.status = 'expired';
+
+    //  remove to the order table
+    const orders = getState<Orders>('orders');
+    const mutableNextOrders = {...orders};
+    delete mutableNextOrders[orderId];
+    setState('orders', mutableNextOrders);
+
+    //  move to expired table
+    const expiredOrders = getState<Orders>('expiredOrders');
+    setState('expiredOrders', {
+      ...expiredOrders,
+      [orderId]: mutableOrder,
+    });
   }
 
   // public methods

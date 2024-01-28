@@ -6,6 +6,7 @@ import {Customer} from '@/services/api/getCustomers';
 import {Methods as AppMethods} from '@/App.actions';
 import Toast from 'react-native-toast-message';
 import moment from 'moment';
+import getProps from '@/services/bit/utils/getProps';
 
 export interface Methods {
   handlePressComplete: (orderId: number) => unknown;
@@ -81,17 +82,24 @@ const AppActions: IActions<Methods> = ({useRegisterActions, setState}) => {
   }
 
   function handleTakeOrder(orderId: number) {
+    const expireDurationInSec = getProps<number>('expireDurationInSec', {context: 'App'}); //prettier-ignore
+
+    const timerOffset = expireDurationInSec - 1;
+    setState('countdownTimer', `${timerOffset}`.padStart(2, '0'));
+
     appActions.handleTakeOrder(orderId);
   }
 
   function handleExpiredOrder(orderId: number) {
-    appActions.handleExpiredOrder(orderId);
+    navigation.goBack();
     Toast.show({
       type: 'error',
       text1: `Expired PO-${orderId}`,
       text2: 'Order has been expired',
       position: 'bottom',
     });
+
+    appActions.handleExpiredOrder(orderId);
   }
 
   // public methods
