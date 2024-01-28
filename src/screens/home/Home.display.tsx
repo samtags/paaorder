@@ -1,4 +1,5 @@
-import {HStack, Box, VStack} from 'native-base';
+import {HStack, Box, VStack, FlatList} from 'native-base';
+import {StyleSheet} from 'react-native';
 import {SafeAreaView} from 'react-native';
 import {useActions, useProps} from '@/services/bit';
 import {Customers, Orders} from '@/App.state';
@@ -12,45 +13,50 @@ import Card from '@/components/card';
 export default function Home() {
   const actions = useActions<Methods>();
 
-  const orders = useProps<Orders>('orders', {context: 'App'});
+  const orders = useProps<Order[]>('orders');
   const completedOrders = useProps<Orders>('completedOrders', {context: 'App'});
   const expiredOrders = useProps<Orders>('expiredOrders', {context: 'App'});
   const customers = useProps<Customers>('customers', {context: 'App'});
 
   const totalEarnings = useProps<number>('totalEarnings');
 
-  const openOrdersCount = Object.keys(orders).length;
+  const openOrdersCount = orders.length;
   const completedOrdersCount = Object.keys(completedOrders).length;
   const expiredOrdersCount = Object.keys(expiredOrders).length;
 
   return (
-    <SafeAreaView>
-      <VStack pt={8}>
-        <Earnings total={totalEarnings} />
+    <SafeAreaView style={styles.container}>
+      <VStack pt={8} flex={1}>
+        <Box>
+          <Earnings total={totalEarnings} />
 
-        <HStack space={2} mt={8} px={4}>
-          <Banner
-            value={completedOrdersCount}
-            label="Abgeschlossene"
-            color="#00a4e0"
-            onPress={() => actions.handleRedirectToCompleted()}
-          />
-          <Banner
-            value={expiredOrdersCount}
-            label="Abgelaufene"
-            color="#00263e"
-            onPress={() => actions.handleRedirectToExpired()}
-          />
-        </HStack>
+          <HStack space={2} mt={8} px={4}>
+            <Banner
+              value={completedOrdersCount}
+              label="Abgeschlossene"
+              color="#00a4e0"
+              onPress={() => actions.handleRedirectToCompleted()}
+            />
+            <Banner
+              value={expiredOrdersCount}
+              label="Abgelaufene"
+              color="#00263e"
+              onPress={() => actions.handleRedirectToExpired()}
+            />
+          </HStack>
 
-        <Box my={8} px={4}>
-          <Heading title="Aufträge" count={openOrdersCount} />
+          <Box mt={8} px={4}>
+            <Heading title="Aufträge" count={openOrdersCount} />
+          </Box>
         </Box>
 
-        <VStack space={2}>
-          {/* todo: implement in flat list */}
-          {Object.keys(orders).map(orderId => {
-            const order: Order | undefined = orders[Number(orderId)];
+        <FlatList
+          mt={4}
+          data={orders}
+          ListHeaderComponent={() => <Box mt={4} />}
+          ItemSeparatorComponent={() => <Box mt={2} />}
+          renderItem={list => {
+            const order = list.item;
             const customer = customers[order?.customerId];
 
             return (
@@ -62,9 +68,15 @@ export default function Home() {
                 itemCount={order?.items.length ?? 0}
               />
             );
-          })}
-        </VStack>
+          }}
+        />
       </VStack>
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    height: '100%',
+  },
+});

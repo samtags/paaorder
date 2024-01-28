@@ -12,6 +12,7 @@ export interface Methods {
 
 const AppActions: IActions<Methods> = ({useRegisterActions, setState}) => {
   const navigation = useNavigation();
+  const orders = useProps<Orders>('orders', {context: 'App'});
   const completedOrders = useProps<Orders>('completedOrders', {context: 'App'});
 
   function handlePressOrder(order: Order) {
@@ -45,6 +46,9 @@ const AppActions: IActions<Methods> = ({useRegisterActions, setState}) => {
   });
 
   setState('totalEarnings', totalEarnings);
+
+  const orderList = Object.keys(orders).map(orderId => orders[Number(orderId)]);
+  setState('orders', orderList);
 
   // public methods
   return useRegisterActions({
