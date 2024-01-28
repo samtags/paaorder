@@ -13,11 +13,11 @@ import Card from '@/components/card';
 export default function Home() {
   const actions = useActions<Methods>();
 
-  const orders = useProps<Order[]>('orders');
   const completedOrders = useProps<Orders>('completedOrders', {context: 'App'});
   const expiredOrders = useProps<Orders>('expiredOrders', {context: 'App'});
   const customers = useProps<Customers>('customers', {context: 'App'});
 
+  const orders = useProps<Order[]>('orders');
   const totalEarnings = useProps<number>('totalEarnings');
 
   const openOrdersCount = orders.length;
