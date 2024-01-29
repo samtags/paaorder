@@ -42,6 +42,15 @@ const AppActions: IActions<Methods> = ({useRegisterActions, setState}) => {
     }
 
     if (order.status === 'taken') {
+      // show remaining timer on mount
+      const secondsRemaining = moment().diff(order.expirationDate, 'seconds'); // prettier-ignore
+      if (secondsRemaining <= 0) {
+        setState(
+          'countdownTimer',
+          `${Math.abs(secondsRemaining)}`.padStart(2, '0'),
+        );
+      }
+
       if (order.expirationDate) {
         // todo: change to native module
         timer = setInterval(() => {
