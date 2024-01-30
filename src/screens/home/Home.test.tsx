@@ -39,7 +39,7 @@ describe('Should calculated earnings', () => {
         <Home />
       </MockApp>,
     );
-    expect(screen.getByText(amount.format(20))).toBeTruthy();
+    expect(screen.getByText(amount.format(20))).toBeOnTheScreen();
   });
 
   it('With tax', () => {
@@ -57,7 +57,7 @@ describe('Should calculated earnings', () => {
       </MockApp>,
     );
 
-    expect(screen.getByText(amount.format(afterTax))).toBeTruthy();
+    expect(screen.getByText(amount.format(afterTax))).toBeOnTheScreen();
   });
 
   it('Combination of with tax and without tax', () => {
@@ -77,7 +77,9 @@ describe('Should calculated earnings', () => {
       </MockApp>,
     );
 
-    expect(screen.getByText(amount.format(totalPriceAfterTax))).toBeTruthy();
+    expect(
+      screen.getByText(amount.format(totalPriceAfterTax)),
+    ).toBeOnTheScreen();
   });
 });
 
@@ -101,7 +103,7 @@ it('Should redirect to completed', () => {
   fireEvent.press(completedButtonElement);
 
   // Mock completed screen should be displayed in the screen
-  expect(screen.getByText('Completed Screen')).toBeTruthy();
+  expect(screen.getByText('Completed Screen')).toBeOnTheScreen();
 });
 
 it('Should redirect to expired', () => {
@@ -124,7 +126,7 @@ it('Should redirect to expired', () => {
   fireEvent.press(expiredButtonElement);
 
   // Mock completed screen should be displayed in the screen
-  expect(screen.getByText('Expired bookings')).toBeTruthy();
+  expect(screen.getByText('Expired bookings')).toBeOnTheScreen();
 });
 
 it('Should able to preview order details', () => {
@@ -146,7 +148,7 @@ it('Should able to preview order details', () => {
   const firstOrder = screen.getByText(/PO-1/);
   fireEvent.press(firstOrder);
 
-  expect(screen.getByText('Order Details')).toBeTruthy();
+  expect(screen.getByText('Order Details')).toBeOnTheScreen();
 });
 
 const MockApp = createComponent({
