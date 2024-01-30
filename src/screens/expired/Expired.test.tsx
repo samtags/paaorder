@@ -1,8 +1,8 @@
-import mockCompletedOrders from '@/__test__/ordersTable';
+import mockExpiredOrders from '@/__test__/ordersTable';
 import {fireEvent, render, screen} from '@testing-library/react-native';
 import createComponent from '@/services/bit';
 import {createContext} from 'react';
-import Completed from '@/screens/completed';
+import Expired from '@/screens/expired';
 import {NativeBaseProvider} from 'native-base';
 import AppState from '@/App.state';
 import {inset} from '@/services/native-base';
@@ -13,14 +13,14 @@ import NavigationContainer from '@/services/navigator/Container';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {Text} from 'react-native';
 
-it('Should show complete orders', async () => {
+it('Should show expired orders', async () => {
   render(
-    <MockApp state={{completedOrders: mockCompletedOrders}}>
-      <Completed />
+    <MockApp state={{expiredOrders: mockExpiredOrders}}>
+      <Expired />
     </MockApp>,
   );
 
-  const orderCount = Object.keys(mockCompletedOrders).length;
+  const orderCount = Object.keys(mockExpiredOrders).length;
   expect(screen.queryAllByText(/PO-/).length).toBe(orderCount);
 });
 
@@ -29,21 +29,21 @@ describe('Should calculated earnings', () => {
 
   it('Without tax', () => {
     // total should be 20
-    const mockCompletedOrdersWithoutTax: Orders = {
+    const mockExpiredOrdersWithoutTax: Orders = {
       1: {items: [], orderId: 1, totalPrice: 10},
       2: {items: [], orderId: 2, totalPrice: 10},
     };
 
     render(
-      <MockApp state={{completedOrders: mockCompletedOrdersWithoutTax}}>
-        <Completed />
+      <MockApp state={{expiredOrders: mockExpiredOrdersWithoutTax}}>
+        <Expired />
       </MockApp>,
     );
     expect(screen.getByText(amount.format(20))).toBeOnTheScreen();
   });
 
   it('With tax', () => {
-    const mockCompletedOrdersWithTax: Orders = {
+    const mockExpiredOrdersWithTax: Orders = {
       1: {items: [], orderId: 1, totalPrice: 50, taxFree: false},
       2: {items: [], orderId: 2, totalPrice: 50, taxFree: false},
     };
@@ -52,8 +52,8 @@ describe('Should calculated earnings', () => {
     const afterTax = total - total * TAX_PERCENTAGE;
 
     render(
-      <MockApp state={{completedOrders: mockCompletedOrdersWithTax}}>
-        <Completed />
+      <MockApp state={{expiredOrders: mockExpiredOrdersWithTax}}>
+        <Expired />
       </MockApp>,
     );
 
@@ -61,7 +61,7 @@ describe('Should calculated earnings', () => {
   });
 
   it('Combination of with tax and without tax', () => {
-    const mockCompletedOrders: Orders = {
+    const mockExpiredOrders: Orders = {
       1: {items: [], orderId: 1, totalPrice: 100, taxFree: false}, // 100
       2: {items: [], orderId: 2, totalPrice: 100, taxFree: true}, // 100 minus total price times tax
     };
@@ -72,8 +72,8 @@ describe('Should calculated earnings', () => {
     const totalPriceAfterTax = total - taxInSecondOrder;
 
     render(
-      <MockApp state={{completedOrders: mockCompletedOrders}}>
-        <Completed />
+      <MockApp state={{expiredOrders: mockExpiredOrders}}>
+        <Expired />
       </MockApp>,
     );
 
@@ -89,11 +89,11 @@ it('Should be able to preview order', () => {
   const MockPreviewComponent = () => <Text>Order Preview</Text>;
 
   render(
-    <MockApp state={{completedOrders: mockCompletedOrders}}>
+    <MockApp state={{expiredOrders: mockExpiredOrders}}>
       <NavigationContainer>
         <Stack.Navigator initialRouteName="Home">
           {/* prettier-ignore */}
-          <Stack.Screen name="Completed" component={Completed} />
+          <Stack.Screen name="Completed" component={Expired} />
           <Stack.Screen name="Preview" component={MockPreviewComponent} />
         </Stack.Navigator>
       </NavigationContainer>
