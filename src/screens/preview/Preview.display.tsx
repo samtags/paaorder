@@ -47,6 +47,33 @@ export default function Order() {
             </VStack>
           </VStack>
         </VStack>
+
+        <Box>
+          <VStack bgColor="white" p={4} mt={1}>
+            <HStack justifyContent="space-between">
+              <VStack>
+                <Span fontSize="md" fontWeight="medium">
+                  Zwischensumme
+                </Span>
+                <Span color="gray.400">Inklusive Steuern (0.00)</Span>
+              </VStack>
+              <Span fontSize="md" fontWeight="bold">
+                {amount.format(0)}
+              </Span>
+            </HStack>
+          </VStack>
+
+          <VStack bgColor="white" p={4}>
+            <HStack justifyContent="space-between" alignItems="center">
+              <Span fontSize="md" fontWeight="medium">
+                Gesamt
+              </Span>
+              <Span fontSize="md" fontWeight="bold">
+                {amount.format(Number(order?.totalPrice))}
+              </Span>
+            </HStack>
+          </VStack>
+        </Box>
       </VStack>
     </SafeAreaView>
   );

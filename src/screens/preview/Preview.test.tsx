@@ -2,7 +2,7 @@ import {createContext} from 'react';
 import {NativeBaseProvider} from 'native-base';
 import createComponent from '@/services/bit';
 import AppState from '@/App.state';
-import Order from '@/screens/order';
+import Preview from '@/screens/preview';
 import {inset} from '@/services/native-base';
 import {render, screen} from '@testing-library/react-native';
 import amount from '@/services/utils/formatAmount';
@@ -33,7 +33,7 @@ jest.mock('@react-navigation/native', () => ({
 it('Should display order details', async () => {
   render(
     <MockApp state={{orders: {1: mockOrder}}}>
-      <Order />
+      <Preview />
     </MockApp>,
   );
 
