@@ -7,6 +7,7 @@ import {Methods as AppMethods} from '@/App.actions';
 import Toast from 'react-native-toast-message';
 import moment from 'moment';
 import getProps from '@/services/bit/utils/getProps';
+import {goBack} from '@/services/navigator';
 
 export interface Methods {
   handlePressComplete: (orderId: number) => unknown;
@@ -87,7 +88,7 @@ const AppActions: IActions<Methods> = ({useRegisterActions, setState}) => {
       position: 'bottom',
     });
 
-    navigation.goBack();
+    goBack();
   }
 
   function handleTakeOrder(orderId: number) {
