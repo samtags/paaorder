@@ -1,4 +1,3 @@
-import {useNavigation} from '@react-navigation/native';
 import {IActions, useProps} from '@/services/bit';
 import {Order} from '@/services/api/getOrders';
 import {Orders} from '@/App.state';
@@ -11,14 +10,10 @@ export interface Methods {
 }
 
 const AppActions: IActions<Methods> = ({useRegisterActions, setState}) => {
-  const navigation = useNavigation();
   const orders = useProps<Orders>('orders', {context: 'App'});
   const completedOrders = useProps<Orders>('completedOrders', {context: 'App'});
 
   function handlePressOrder(order: Order) {
-    type Navigate = (screen: string, payload: Order) => unknown;
-    const navigate = navigation.navigate as Navigate;
-
     navigate('Order', order);
   }
 
