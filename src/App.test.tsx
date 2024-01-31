@@ -148,6 +148,55 @@ describe('handleCompleteOrder', () => {
 });
 
 describe('expiredOrders', () => {
-  it.todo('should remove the order in order table');
-  it.todo('should add order to expiredOrders table');
+  it('should remove the order in order table', () => {
+    let orderRef: Orders | undefined;
+
+    function Interface() {
+      const actions = useActions<Methods>({context: 'App'});
+
+      const orders = useProps<Orders>('orders', {context: 'App'}); // prettier-ignore
+      orderRef = orders;
+
+      return (
+        <TouchableOpacity onPress={() => actions.handleExpiredOrder(1)}>
+          <Text>Expire Order</Text>
+        </TouchableOpacity>
+      );
+    }
+
+    render(
+      <App state={{orders: ordersTable}}>
+        <Interface />
+      </App>,
+    );
+
+    expect(orderRef?.[1]).toBeDefined();
+    fireEvent.press(screen.getByText('Expire Order'));
+    expect(orderRef?.[1]).toBeUndefined();
+  });
+  it('should add order to expiredOrders table', () => {
+    let expiredOrderRef: Orders | undefined;
+
+    function Interface() {
+      const actions = useActions<Methods>({context: 'App'});
+      const expiredOrders = useProps<Orders>('expiredOrders', {context: 'App'}); // prettier-ignore
+      expiredOrderRef = expiredOrders;
+
+      return (
+        <TouchableOpacity onPress={() => actions.handleExpiredOrder(1)}>
+          <Text>Expire Order</Text>
+        </TouchableOpacity>
+      );
+    }
+
+    render(
+      <App state={{orders: ordersTable}}>
+        <Interface />
+      </App>,
+    );
+
+    expect(Object.keys(expiredOrderRef!).length).toBe(0);
+    fireEvent.press(screen.getByText('Expire Order'));
+    expect(expiredOrderRef?.[1]).toBeDefined();
+  });
 });
