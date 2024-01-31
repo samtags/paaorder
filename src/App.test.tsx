@@ -1,5 +1,5 @@
 import {createContext} from 'react';
-import createComponent, {useActions} from '@/services/bit';
+import createComponent, {useActions, useProps} from '@/services/bit';
 import AppState, {Orders} from '@/App.state';
 import {fireEvent, render, screen} from '@testing-library/react-native';
 import AppActions, {Methods} from '@/App.actions';
@@ -89,8 +89,62 @@ describe('handleTakeOrder', () => {
 });
 
 describe('handleCompleteOrder', () => {
-  it.todo('should remove the order in order table');
-  it.todo('should add order to completedOrders table');
+  it('should remove the order in order table', () => {
+    let ordersRef: Orders | undefined;
+
+    function Interface() {
+      const actions = useActions<Methods>({context: 'App'});
+
+      const orders = useProps<Orders>('orders', {context: 'App'});
+      ordersRef = orders;
+
+      return (
+        <TouchableOpacity onPress={() => actions.handleCompleteOrder(1)}>
+          <Text>Complete Order</Text>
+        </TouchableOpacity>
+      );
+    }
+
+    render(
+      <App state={{orders: ordersTable}}>
+        <Interface />
+      </App>,
+    );
+
+    expect(ordersRef?.[1]).toBeDefined();
+    fireEvent.press(screen.getByText('Complete Order'));
+    expect(ordersRef?.[1]).toBeUndefined();
+  });
+  it('should add order to completedOrders table', () => {
+    let completedOrdersRef: Orders | undefined;
+
+    function Interface() {
+      const actions = useActions<Methods>({context: 'App'});
+
+      const completedOrders = useProps<Orders>('completedOrders', {context: 'App'}); // prettier-ignore
+      completedOrdersRef = completedOrders;
+
+      return (
+        <TouchableOpacity onPress={() => actions.handleCompleteOrder(1)}>
+          <Text>Complete Order</Text>
+        </TouchableOpacity>
+      );
+    }
+
+    render(
+      <App state={{orders: ordersTable}}>
+        <Interface />
+      </App>,
+    );
+
+    // no completed orders yet
+    expect(Object.keys(completedOrdersRef!).length).toBe(0);
+
+    fireEvent.press(screen.getByText('Complete Order'));
+
+    // 1 order added to completed order table
+    expect(Object.keys(completedOrdersRef!).length).toBe(1);
+  });
 });
 
 describe('expiredOrders', () => {
